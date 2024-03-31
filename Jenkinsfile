@@ -1,22 +1,62 @@
 pipeline {
-    agent any
-
+    
+    agent any 
+    
+    environment {
+        IMAGE_TAG = "${BUILD_NUMBER}"
+    }
+    
     stages {
-        stage('Build') {
-            steps {
-                // Build your GUI application
+        
+        stage('Checkout'){
+           steps {
+                git 'https://github.com/prasad3936/Linux-server-monitor'
+           }
+        }
+
+        stage('Build Docker'){
+            steps{
+                script{
+                    sh '''
+                    echo 'Buid Docker Image'
+                    docker build -t praszp246/cicd-e2e:${BUILD_NUMBER} .
+                    '''
+                }
             }
         }
-        stage('Dockerize') {
-            steps {
-                // Build Docker image
+
+        stage('Push the artifacts'){
+           steps{
+                script{
+                    sh '''
+                    echo 'Push to Repo'
+                    docker push praszp246/cicd-e2e:${BUILD_NUMBER}
+                    '''
+                }
             }
         }
-        stage('Deploy') {
+        
+        stage('Checkout K8S manifest SCM'){
             steps {
-                // Deploy to Minikube
-                sh 'kubectl apply -f deployment.yaml'
-                sh 'kubectl apply -f service.yaml'
+                git 'https://github.com/prasad3936/Linux-server-monitor'
+            }
+        }
+        
+        stage('Update K8S manifest & push to Repo'){
+            steps {
+                script{
+                    withCredentials([usernamePassword(credentialsId: 'f87a34a8-0e09-45e7-b9cf-6dc68feac670', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                        sh '''
+                        cat deploy.yaml
+                        sed -i '' "s/32/${BUILD_NUMBER}/g" deploy.yaml
+                        cat deploy.yaml
+                        git add deploy.yaml
+                        git commit -m 'Updated the deploy yaml | Jenkins Pipeline'
+                        git remote -v
+                        git push https://github.com/iam-veeramalla/cicd-demo-manifests-repo.git HEAD:main
+                        '''                        
+                    }
+                }
             }
         }
     }
