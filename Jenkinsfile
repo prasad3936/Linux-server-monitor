@@ -42,7 +42,7 @@ pipeline {
         stage('Update K8S manifest & push to Repo') {
             steps {
                 script {
-                    withCredentials([string(credentialsId: 'jen-git', variable: 'GITHUB_TOKEN')]) {
+                    withCredentials([string(credentialsId: 'git', variable: 'GITHUB_TOKEN')]) {
                         sh '''
                         sed -i '' "s/replaceImageTag/${BUILD_NUMBER}/g" deploy.yml
                         git add deploy.yml
