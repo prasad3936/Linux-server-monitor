@@ -17,10 +17,13 @@ pipeline {
         stage('Build Docker'){
             steps{
                 script{
-                    sh '''
-                    echo 'Buid Docker Image'
-                    docker build -t praszp246/cicd-e2e:${BUILD_NUMBER} .
-                    '''
+                    withCredentials([usernamePassword(credentialsId: 'docker-cred', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        sh '''
+                        echo 'Push to Repo'
+                        docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+                        docker push praszp246/cicd-e2e:${BUILD_NUMBER}
+                        docker logout
+                        '''
                 }
             }
         }
@@ -28,9 +31,9 @@ pipeline {
         stage('Push the artifacts'){
            steps{
                 script{
-                    sh '''
-                    echo 'Push to Repo'
-                    docker push praszp246/cicd-e2e:${BUILD_NUMBER}
+                     sh '''
+                    echo 'Buid Docker Image'
+                    docker build -t praszp246/cicd-e2e:${BUILD_NUMBER} .
                     '''
                 }
             }
@@ -45,16 +48,15 @@ pipeline {
         stage('Update K8S manifest & push to Repo'){
             steps {
                 script{
-                    withCredentials('github') {
+                   withCredentials([string(credentialsId: 'github', variable: 'GITHUB_CREDENTIALS')]) {
                         sh '''
                         cat deploy.yaml
                         sed -i '' "s/32/${BUILD_NUMBER}/g" deploy.yaml
                         cat deploy.yaml
                         git add deploy.yaml
                         git commit -m 'Updated the deploy yaml | Jenkins Pipeline'
-                        git remote -v
                         git push https://github.com/prasad3936/linux-monitor-manifest.git HEAD:main
-                        '''                        
+                        '''              
                     }
                 }
             }
