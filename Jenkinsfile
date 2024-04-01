@@ -42,12 +42,12 @@ pipeline {
         stage('Update K8S manifest & push to Repo') {
             steps {
                 script {
-                    withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
+                    withCredentials([string(credentialsId: 'git', variable: 'GITHUB_TOKEN')]) {
                         sh '''
-                        cat deploy.yaml
+                        cat deploy.yml
                         sed -i '' "s/replaceImageTag/${BUILD_NUMBER}/g" deploy.yaml
                         cat deploy.yaml
-                        git add deploy.yaml
+                        git add deploy.yml
                         git commit -m 'Updated the deploy yaml | Jenkins Pipeline'
                         git remote -v
                         git push https://github.com/prasad3936/linux-monitor-manifest.git HEAD:main
