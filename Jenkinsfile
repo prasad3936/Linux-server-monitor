@@ -48,6 +48,8 @@ pipeline {
                         sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" deploy.yml
                         cat deploy.yml
                         git add deploy.yml
+                        git config user.email "prasadcpatil246@gmail.com"
+                        git config user.name "prasad3936"
                         git commit -m 'Updated the deploy yaml | Jenkins Pipeline'
                         git remote -v
                         git push https://github.com/prasad3936/linux-monitor-manifest.git HEAD:main
