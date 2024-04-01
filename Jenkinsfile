@@ -1,6 +1,4 @@
-
 pipeline {
-    
     agent any 
     
     environment {
@@ -8,42 +6,43 @@ pipeline {
     }
     
     stages {
-        
-        stage('Checkout'){
-           steps {
+        stage('Checkout') {
+            steps {
                 git 'https://github.com/prasad3936/Linux-server-monitor.git'
-           }
+            }
         }
 
-        stage('Build Docker'){
-            steps{
-                script{
+        stage('Build Docker') {
+            steps {
+                script {
                     sh '''
-                    echo 'Buid Docker Image'
+                    echo 'Build Docker Image'
                     docker build -t praszp246/cicd-e2e:${BUILD_NUMBER} .
                     '''
                 }
             }
         }
 
-        stage('Push the artifacts'){
-           steps{
-                script{
+        stage('Push the artifacts') {
+            steps {
+                script {
                     docker.withRegistry('https://index.docker.io/v1/', 'github') {
-                        docker.image('praszp246/cicd-e2e').push('IMAGE_TAG')
+                        docker.image('praszp246/cicd-e2e').push("${IMAGE_TAG}")
+                    }
                 }
             }
         }
         
-        stage('Checkout K8S manifest SCM'){
+        stage('Checkout K8S manifest SCM') {
             steps {
                 git 'https://github.com/prasad3936/linux-monitor-manifest.git'
             }
         }
         
-        stage('Update K8S manifest & push to Repo'){
+        stage('Update K8S manifest & push to Repo') {
             steps {
-                script{ withCredentials([string(credentialsId: 'github', variable: 'GITHUB_CREDENTIALS')]) {
+                script {
+                    withCredentials([string(credentialsId: 'github', variable: 'GITHUB_CREDENTIALS')]) {
                         sh '''
                         cat deploy.yaml
                         sed -i '' "s/32/${BUILD_NUMBER}/g" deploy.yaml
