@@ -29,10 +29,8 @@ pipeline {
         stage('Push the artifacts'){
            steps{
                 script{
-                    sh '''
-                    echo 'Push to Repo'
-                    docker push praszp246/cicd-e2e:${BUILD_NUMBER}
-                    '''
+                    docker.withRegistry('https://index.docker.io/v1/', 'github') {
+                        docker.image('praszp246/cicd-e2e').push('IMAGE_TAG')
                 }
             }
         }
