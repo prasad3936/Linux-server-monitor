@@ -26,8 +26,8 @@ pipeline {
         stage('Push the artifacts') {
             steps {
                 script {
-                    docker.withRegistry('https://index.docker.io/v1/', 'github') {
-                        docker.image('praszp246/cicd-e2e').push("${IMAGE_TAG}")
+                    docker.withRegistry('your-docker-registry-url', 'docker-cred') {
+                        docker.build("praszp246/cicd-e2e:${IMAGE_TAG}", '.').push()
                     }
                 }
             }
