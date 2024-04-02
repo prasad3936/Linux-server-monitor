@@ -48,6 +48,10 @@ pipeline {
                         sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" deploy.yml
                         cat deploy.yml
                         git add deploy.yml
+                        cat pod.yml
+                        sed -i "s/16/${BUILD_NUMBER}/g" pod.yml
+                        cat pod.yml
+                        git add pod.yml
                         git config user.email "prasadcpatil246@gmail.com"
                         git config user.name "prasad3936"
                         git commit -m 'Updated the deploy yaml | Jenkins Pipeline'
