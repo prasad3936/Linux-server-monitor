@@ -1,18 +1,18 @@
 pipeline {
     agent any 
-    
+    //To avoid clash in image build numbers and to make it easy to point out related image builds
     environment {
         IMAGE_TAG = "${BUILD_NUMBER}"
     }
     
-    stages {
+    stages { //Checking the code is first step 
         stage('Checkout') {
             steps {
                 git 'https://github.com/prasad3936/Linux-server-monitor.git'
             }
         }
 
-        stage('Build Docker') {
+        stage('Build Docker') { //Building the container image
             steps {
                 script {
                     sh '''
@@ -23,7 +23,7 @@ pipeline {
             }
         }
 
-        stage('Push the artifacts') {
+        stage('Push the artifacts') { //You have to push the image to a central repository , making it easy to access . Central Repository used here is Dockerhub
             steps {
                 script {
                     docker.withRegistry('https://index.docker.io/v1/', 'docker-cred') {
@@ -33,14 +33,14 @@ pipeline {
             }
         }
         
-        stage('Checkout K8S manifest SCM') {
+        stage('Checkout K8S manifest SCM') {//Checking Out Manifest files for k8s
             steps {
                 git branch: 'main', url: 'https://github.com/prasad3936/linux-monitor-manifest.git'
             }
         }
         
         stage('Update K8S manifest & push to Repo') {
-            steps {
+            steps { //This section is to update manifest files after every iteration of code update performed 
                 script {
                     withCredentials([string(credentialsId: 'git', variable: 'GITHUB_TOKEN')]) {
                         sh '''
@@ -52,7 +52,7 @@ pipeline {
                         sed -i "s/16/${BUILD_NUMBER}/g" pod.yml
                         cat pod.yml
                         git add pod.yml
-                        git config user.email "prasadcpatil246@gmail.com"
+                        git config user.email "prasadcpatil246@gmail.com" //login
                         git config user.name "prasad3936"
                         git commit -m 'Updated the deploy yaml | Jenkins Pipeline'
                         git remote -v
