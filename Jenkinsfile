@@ -54,6 +54,7 @@ pipeline {
                         git add pod.yml
                         git config user.email "prasadcpatil246@gmail.com" //login
                         git config user.name "prasad3936"
+                        git status
                         git commit -m 'Updated the deploy yaml | Jenkins Pipeline'
                         git remote -v
                         git push https://${GITHUB_TOKEN}@github.com/prasad3936/linux-monitor-manifest HEAD:main
