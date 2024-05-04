@@ -18,6 +18,7 @@ Hi There ! ,Here are the step-by-step details to set up an end-to-end Jenkins pi
   #### 1.2 Pipeline plugin
    
   #### 1.3 Kubernetes Continuous Deploy plugin
+  #### 1.4 Sonarqube Plugin
 
 ## 2. Create a new Jenkins pipeline:
   #### 2.1 In Jenkins, create a new pipeline job and configure it with the Git repository URL for the flask application.
