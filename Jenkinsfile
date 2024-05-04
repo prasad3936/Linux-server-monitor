@@ -57,7 +57,7 @@ pipeline {
                         git status
                         git commit -m 'Updated the deploy yaml | Jenkins Pipeline'
                         git remote -v
-                        git push https://${GITHUB_TOKEN}@github.com/prasad3936/linux-monitor-manifest HEAD:master
+                        git push https://${GITHUB_TOKEN}@github.com/prasad3936/linux-monitor-manifest HEAD:main
                         '''                        
                     }
                 }
