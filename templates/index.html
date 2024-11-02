@@ -1,69 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>System Stats Dashboard</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
-<div class="container">
-    <!-- System Info Section -->
-    <div class="system-info">
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <!-- System Info Section -->
+      <div class="system-info">
         <h1>System Information</h1>
         <div class="info">
-            <p>OS Version: {{ os_version }}</p>
-            <p>OS Type: {{ os_type }}</p>
-            <p>Uptime: {{ uptime_hours }} hours, {{ uptime_minutes }} minutes, {{ uptime_seconds }} seconds</p>
+          <p>OS Version: {{ os_version }}</p>
+          <p>OS Type: {{ os_type }}</p>
+          <p>
+            <p>Uptime: {{ uptime_str }}</p>
+          </p>
 
-            <!-- CPU Usage Progress Bar -->
-            <div class="progress-bar-container">
-                <p>CPU Usage: {{ cpu_percent }}%</p>
-                <div class="progress-bar">
-                    <div class="progress-bar-fill cpu-bar" style="width: {{ cpu_percent }}%">
-                        {{ cpu_percent }}%
-                    </div>
-                </div>
+          <!-- CPU Usage Progress Bar -->
+          <div class="progress-bar-container">
+            <p>CPU Usage: {{ cpu_percent }}%</p>
+            <div class="progress-bar">
+              <div
+                class="progress-bar-fill cpu-bar"
+                style="width: {{ cpu_percent }}%"
+                title="{{ cpu_percent }}%"
+              >
+                {{ cpu_percent }}%
+              </div>
             </div>
+          </div>
 
-            <!-- Memory Usage Progress Bar -->
-            <div class="progress-bar-container">
-                <p>Memory Usage: {{ memory.percent }}%</p>
-                <div class="progress-bar">
-                    <div class="progress-bar-fill memory-bar" style="width: {{ memory.percent }}%">
-                        {{ memory.percent }}%
-                    </div>
-                </div>
+          <!-- Memory Usage Progress Bar -->
+          <div class="progress-bar-container">
+            <p>
+              Memory Usage: {{ memory_used_gb }} GB / {{ memory_total_gb }} GB
+              ({{ memory_percent }}%)
+            </p>
+            <div class="progress-bar">
+              <div
+                class="progress-bar-fill memory-bar"
+                style="width: {{ memory_percent }}%"
+                title="{{ memory_percent }}%"
+              >
+                {{ memory_percent }}%
+              </div>
             </div>
+          </div>
         </div>
-    </div>
+      </div>
 
-    <!-- Container Info Section -->
-    <div class="container-info">
+      <!-- Container Info Section -->
+      <div class="container-info">
         <h2>Containers</h2>
         <table>
-            <tr>
-                <th>Container Name</th>
-                <th>Container ID</th>
-                <th>Status</th>
-                <th>CPU Usage</th>
-                <th>Memory Usage</th>
-                <th>Memory Limit</th>
-            </tr>
-            {% for container in containers_info %}
-            <tr>
-                <td>{{ container.name }}</td>
-                <td>{{ container.id }}</td>
-                <td class="{{ 'status-running' if container.status == 'running' else 'status-stopped' }}">
-                    {{ container.status }}
-                </td>
-                <td>{{ container.cpu_usage if container.cpu_usage is not none else 'N/A' }}</td>
-                <td>{{ container.memory_usage if container.memory_usage is not none else 'N/A' }}</td>
-                <td>{{ container.memory_limit if container.memory_limit is not none else 'N/A' }}</td>
-            </tr>
-            {% endfor %}
+          <tr>
+            <th>Container Name</th>
+            <th>Container ID</th>
+            <th>Status</th>
+            <th>CPU Usage (%)</th>
+            <th>Memory Usage (GB)</th>
+            <th>Memory Limit (GB)</th>
+          </tr>
+          {% for container in containers_info %}
+          <tr>
+            <td>{{ container.name }}</td>
+            <td>{{ container.id }}</td>
+            <td
+              class="{{ 'status-running' if container.status == 'running' else 'status-stopped' }}"
+            >
+              {{ container.status }}
+            </td>
+            <td>{{ container.cpu_usage }}</td>
+            <td>{{ container.memory_usage }}</td>
+            <td>{{ container.memory_limit }}</td>
+          </tr>
+          {% endfor %}
         </table>
+      </div>
     </div>
-</div>
-</body>
+  </body>
 </html>
-
