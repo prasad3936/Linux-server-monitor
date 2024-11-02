@@ -1,0 +1,115 @@
+/* Reset and general styling */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #f5f5f5;
+    color: #333;
+    font-size: 16px;
+}
+
+/* Main container styling */
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 20px;
+}
+
+/* System info box */
+.system-info, .container-info {
+    padding: 20px;
+    background-color: #ecf0f1;
+    border-radius: 8px;
+}
+
+h1, h2 {
+    color: #2c3e50;
+    margin-bottom: 1em;
+}
+
+/* Progress bars */
+.progress-bar-container {
+    margin: 10px 0;
+}
+
+.progress-bar {
+    background-color: #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    height: 20px;
+    position: relative;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    border-radius: 8px;
+    color: #fff;
+    text-align: right;
+    padding-right: 5px;
+    font-size: 0.9em;
+    line-height: 20px;
+}
+
+.cpu-bar {
+    background-color: #3498db;
+}
+
+.memory-bar {
+    background-color: #e67e22;
+}
+
+/* Table styling */
+.container-info table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.container-info table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #34495e;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+tr:nth-child(even) td {
+    background-color: #f1f1f1;
+}
+
+/* Status colors */
+.status-running {
+    color: green;
+    font-weight: bold;
+}
+
+.status-stopped {
+    color: red;
+    font-weight: bold;
+}
+
+/* Responsive layout */
+@media (max-width: 768px) {
+    .container {
+        grid-template-columns: 1fr;
+    }
+}
+
