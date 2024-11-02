@@ -1,17 +1,56 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-	<title>Server Monitoring System</title>
-	<h6>BY PRASAD ZUNGARE PATIL </h6?
-	
+    <meta charset="UTF-8">
+    <title>System Stats</title>
 </head>
 <body>
-	<h1>Server Monitoring Dashboard</h1>
-        <h2>OS Type: {{ os_type }}</h2>
-        <h2>OS Version: {{ os_version }}</h2>
-	<h2><h2>Uptime: {{ uptime_hours }} hours, {{ uptime_minutes }} minutes, {{ uptime_seconds }} seconds</h2></h2>
-        <h2>CPU Usage: {{ cpu_percent }}%</h2>
-        <h2>Memory Usage: {{ memory.percent }}%</h2>
+    <h1>System Information</h1>
+    <p>CPU Usage: {{ cpu_percent }}%</p>
+    <p>Memory Usage: {{ memory.percent }}%</p>
+    <p>OS Version: {{ os_version }}</p>
+    <p>OS Type: {{ os_type }}</p>
+    <p>Uptime: {{ uptime_hours }} hours, {{ uptime_minutes }} minutes, {{ uptime_seconds }} seconds</p>
+
+    <h2>Containers</h2>
+    <table border="1">
+        <tr>
+            <th>Container Name</th>
+            <th>Container ID</th>
+            <th>Status</th>
+            <th>CPU Usage</th>
+            <th>Memory Usage</th>
+            <th>Memory Limit</th>
+        </tr>
+        {% for container in containers_info %}
+        <tr>
+            <td>{{ container.name }}</td>
+            <td>{{ container.id }}</td>
+            <td>{{ container.status }}</td>
+            <td>
+                {% if container.cpu_usage is not none %}
+                    {{ container.cpu_usage }}
+                {% else %}
+                    N/A
+                {% endif %}
+            </td>
+            <td>
+                {% if container.memory_usage is not none %}
+                    {{ container.memory_usage }}
+                {% else %}
+                    N/A
+                {% endif %}
+            </td>
+            <td>
+                {% if container.memory_limit is not none %}
+                    {{ container.memory_limit }}
+                {% else %}
+                    N/A
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
 </body>
 </html>
 
