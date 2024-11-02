@@ -1,15 +1,22 @@
-#Using Ubuntu as base OS for our application
-FROM ubuntu:latest AS build
+# Use an appropriate base image
+FROM python:3.11-slim
 
-#Install all Dependencies
-RUN  apt-get update &&  apt-get install python3-flask python3-psutil -y
+# Install necessary packages
+RUN apt-get update && \
+    apt-get install -y python3-flask python3-psutil && \
+    apt-get install -y python3-pip
 
-#Setting Up the working direct
+# Upgrade pip
+RUN pip install --upgrade pip
+
+# Install your Python packages
+RUN pip install --upgrade tornado flask_socketio docker
+
+# Set up the working directory
 WORKDIR /app
-#copying required data to target directory 
-COPY . /app
 
-CMD ["python3","app.py"]
-#To Use port 5000, need to expose it first
-EXPOSE 5000
+# Copy your application code to the container
+COPY . .
 
+# Command to run your application (change as needed)
+CMD ["python3", "app.py"]
