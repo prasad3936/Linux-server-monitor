@@ -3,30 +3,36 @@ name: CI/CD for Python App on Minikube
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Set up Minikube
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y conntrack curl
+
+      - name: Install Minikube
         run: |
           curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
           sudo install minikube-linux-amd64 /usr/local/bin/minikube
-          minikube start --driver=none
+
+      - name: Start Minikube
+        run: |
+          sudo minikube start --driver=none
           eval $(minikube docker-env)
 
       - name: Build Docker Image
         run: |
           docker build -t python-app:latest .
 
-      - name: Apply Kubernetes Manifests
+      - name: Deploy to Kubernetes
         run: |
           kubectl apply -f k8s/
-
-      - name: Verify Deployment
-        run: |
           kubectl rollout status deployment/python-app
