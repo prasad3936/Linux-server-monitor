@@ -45,7 +45,8 @@ pipeline {
                     withCredentials([string(credentialsId: 'git-jen', variable: 'GITHUB_TOKEN')]) {
                         sh '''
                         cat deploy.yml
-                        sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" deploy.yml
+                        sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" deploy.yml 
+                        sed -i "s/[0-9]\+/\1${BUILD_NUMBER}/g" deploy.yml
                         cat deploy.yml
                         git add deploy.yml
                         cat pod.yml
